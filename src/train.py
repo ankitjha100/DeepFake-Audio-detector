@@ -21,8 +21,6 @@ def main(config_path="configs/config.yaml"):
     # device
     device = torch.device("cuda" if (cfg.get("device") == "auto" and torch.cuda.is_available()) or cfg.get("device") == "cuda" else "cpu")
     print("Using device:", device)
-
-
     train_loader, test_loader = make_dataloaders(
     cfg.get("real_dir"),
     cfg.get("fake_dir"),
@@ -34,12 +32,8 @@ def main(config_path="configs/config.yaml"):
     hop_length=cfg.get("hop_length"),
     test_ratio=cfg.get("test_ratio", 0.2),
     )
-
-
     model = get_model(cfg.get("model_name", "shallow_cnn"))
     model = model.to(device)
-
-
     tr = Trainer(model, device, save_dir=cfg.get("save_dir"), lr=cfg.get("lr"))
     best_path = tr.fit(train_loader, test_loader, epochs=cfg.get("epochs"))
     print("Training finished. Best model at:", best_path)
